@@ -4,12 +4,14 @@ from functools import wraps
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.conf import settings
+import json
 
 # Librerías de Google API
 from google_auth_oauthlib.flow import Flow
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
-from googleapiclient.http import MediaIoBaseUpload 
+from googleapiclient.http import MediaIoBaseUpload
+from googleapiclient.errors import HttpError
 
 # --- CONSTANTES Y DICCIONARIOS ---
 
@@ -138,6 +140,17 @@ def subir_video(request):
             messages.success(request, f"¡Video subido con éxito! ID: {response['id']}")
             return redirect('videos:mis_videos')
 
+        except HttpError as e:
+            try:
+                err_content = json.loads(e.content.decode())
+                reasons = err_content.get('error', {}).get('errors', [])
+                if any(r.get('reason') == 'youtubeSignupRequired' for r in reasons):
+                    messages.error(request, 'La cuenta de Google no tiene un canal de YouTube. Crea un canal en YouTube y vuelve a intentarlo.')
+                else:
+                    messages.error(request, f"Error al subir: {e}")
+            except Exception:
+                messages.error(request, f"Error al subir: {e}")
+            return redirect('videos:subir_video')
         except Exception as e:
             messages.error(request, f"Error al subir: {str(e)}")
             return redirect('videos:subir_video')
@@ -348,6 +361,10 @@ def oauth_callback(request):
                 'thumbnail': channel['snippet']['thumbnails']['default']['url'],
                 'subscribers': channel['statistics'].get('subscriberCount', 'N/A')
             }
+        else:
+            messages.error(request, 'La cuenta autorizada no tiene un canal de YouTube. Crea un canal en YouTube y vuelve a autorizar.')
+            request.session.pop('youtube_credentials', None)
+            return redirect('videos:inicio')
         
         messages.success(request, '¡Autenticación exitosa!')
         return redirect('videos:inicio')

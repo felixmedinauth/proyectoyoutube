@@ -14,7 +14,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ===============================
 # YOUTUBE API CONFIG
 # ===============================
-YOUTUBE_API_KEY = 'AIzaSyCqoDUHs_rvicGdqZ2uOFD9yUQZ7_aQZWo'
+YOUTUBE_API_KEY = 'AIzaSyBtnsQg2iF-qqzAZBppgN8huGAJuyLOHxE'
 
 GOOGLE_CLIENT_SECRETS_FILE = os.path.join(BASE_DIR, 'client_secrets.json')
 
