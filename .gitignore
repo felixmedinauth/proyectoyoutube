@@ -1,0 +1,49 @@
+# Ambiente Virtual
+venv/
+env/
+.venv/
+ENV/
+*.venv
+
+# Compilados Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Base de datos
+*.sqlite3
+*.db
+db.sqlite3
+
+# IDE
+.vscode/
+.idea/
+*.code-workspace
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+*.log
+
+# Dependencias locales (si usas node o similar)
+node_modules/
+package-lock.json
+
+# Archivos de caché
+*.cache
+*.tmp
+
+# Distribuciones
+build/
+dist/
+*.egg-info/
+*.whl
